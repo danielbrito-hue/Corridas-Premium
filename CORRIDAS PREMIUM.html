@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Rides - Serviço de Corridas VIP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: radial-gradient(circle at top, #333333 0%, #050505 60%, #000000 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: linear-gradient(145deg, #111111, #1b1b1b);
+            border-radius: 20px;
+            box-shadow:
+                0 25px 60px rgba(0,0,0,0.9),
+                0 0 0 1px rgba(255,255,255,0.02);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Botão de Configurações */
+        .config-btn {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background: rgba(20, 20, 20, 0.9);
+            border: 1px solid rgba(255,255,255,0.08);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            transition: all 0.3s;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            color: #f5f5f5;
+        }
+
+        .config-btn:hover {
+            background: rgba(40, 40, 40, 0.95);
+            transform: rotate(90deg) scale(1.03);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
+        }
+
+        .header {
+            background: radial-gradient(circle at top left, #444444 0%, #111111 40%, #000000 100%);
+            color: white;
+            padding: 32px 30px 26px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent 60%);
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .brand-badge {
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #b0b0b0;
+            margin-bottom: 8px;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            margin-bottom: 6px;
+        }
+
+        .header p {
+            font-size: 13px;
+            opacity: 0.85;
+        }
+
+        .content {
+            padding: 24px 24px 28px;
+        }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            color: #f5f5f5;
+            margin-bottom: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .section-title span.icon {
+            font-size: 18px;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #d0d0d0;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        input[type="number"],
+        input[type="text"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 11px 13px;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.25s;
+            font-family: inherit;
+            background: #111111;
+            border: 1px solid #262626;
+            color: #f5f5f5;
+        }
+
+        input::placeholder,
+        select::placeholder {
+            color: #666666;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #888888;
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
+            background: #141414;
+        }
+
+        .price-display {
+            background: radial-gradient(circle at top, #444444 0%, #111111 60%, #000000 100%);
+            border-radius: 16px;
+            text-align: center;
+            margin: 18px 0 10px;
+            padding: 18px 14px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .price-label {
+            font-size: 13px;
+            color: #b0b0b0;
+            margin-bottom: 4px;
+        }
+
+        .price-value {
+            font-size: 30px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .discount-info {
+            background: rgba(51, 51, 51, 0.85);
+            border-left: 3px solid #6cdd90;
+            padding: 11px 12px;
+            border-radius: 10px;
+            margin: 12px 0;
+            font-size: 13px;
+            color: #e0ffe9;
+        }
+
+        .discount-info strong {
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 999px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+            margin-top: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #f5f5f5 0%, #b3b3b3 40%, #8c8c8c 100%);
+            color: #111111;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 30px rgba(0,0,0,0.6);
+            filter: brightness(1.03);
+        }
+
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            display: none;
+        }
+
+        .btn-whatsapp:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 30px rgba(0,0,0,0.7);
+            filter: brightness(1.05);
+        }
+
+        .btn-secondary {
+            background: #333333;
+            color: #f5f5f5;
+        }
+
+        .btn-secondary:hover {
+            background: #444444;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #6cdd90, #38a169);
+            color: #050505;
+        }
+
+        .btn-success:hover {
+            filter: brightness(1.05);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+        }
+
+        .logout-btn {
+            background: linear-gradient(135deg, #ff4d4d, #b30000);
+            color: white;
+            margin-top: 18px;
+        }
+
+        .logout-btn:hover {
+            filter: brightness(1.05);
+        }
+
+        .info-box {
+            background: rgba(24, 24, 24, 0.95);
+            border-left: 3px solid #5a5a5a;
+            padding: 11px 12px;
+            border-radius: 10px;
+            margin: 14px 0;
+            font-size: 13px;
+            color: #d0d0d0;
+        }
+
+        .info-box strong {
+            display: block;
+            margin-bottom: 4px;
+            color: #f0f0f0;
+        }
+
+        .help-text {
+            font-size: 11px;
+            color: #888888;
+            margin-top: 4px;
+        }
+
+        .calendar-section {
+            background: #0d0d0d;
+            padding: 18px 16px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .calendar-section p {
+            margin-bottom: 10px;
+            color: #bfbfbf;
+            font-size: 13px;
+        }
+
+        iframe {
+            background: #050505;
+        }
+
+        .pricing-table {
+            background: #080808;
+            padding: 12px 12px 10px;
+            border-radius: 12px;
+            margin: 14px 0 4px;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .pricing-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 13px;
+            color: #d0d0d0;
+        }
+
+        .pricing-row:last-child {
+            border-bottom: none;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        /* Modal base */
+        .modal,
+        .login-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.78);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active,
+        .login-modal.active {
+            display: flex;
+        }
+
+        .modal-content,
+        .login-content {
+            background: #101010;
+            border-radius: 18px;
+            padding: 26px 22px 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.06);
+            box-shadow: 0 24px 60px rgba(0,0,0,0.9);
+            color: #f5f5f5;
+        }
+
+        .login-content {
+            max-width: 380px;
+            text-align: left;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+
+        .modal-header h2 {
+            color: #f5f5f5;
+            font-size: 20px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999999;
+            transition: all 0.25s;
+        }
+
+        .close-btn:hover {
+            color: #ffffff;
+            transform: rotate(90deg);
+        }
+
+        .login-content h2 {
+            text-align: center;
+            margin-bottom: 22px;
+            color: #f5f5f5;
+            font-size: 20px;
+        }
+
+        a {
+            color: #d4d4d4;
+        }
+
+        a:hover {
+            color: #ffffff;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                border-radius: 14px;
+            }
+            .header h1 {
+                font-size: 22px;
+            }
+            .header {
+                padding: 24px 18px 18px;
+            }
+            .content {
+                padding: 18px 16px 22px;
+            }
+            .config-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+                top: 14px;
+                right: 14px;
+            }
+            .modal-content,
+            .login-content {
+                padding: 20px 16px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Botão de Configurações (só aparece para admin) -->
+        <button class="config-btn" id="configBtn" style="display: none;" onclick="openConfigModal()">
+            ⚙️
+        </button>
+
+        <div class="header">
+            <div class="brand-badge">PREMIUM RIDES</div>
+            <h1>Corridas Executivas</h1>
+            <p>Transporte sob medida para quem valoriza tempo, conforto e discrição.</p>
+        </div>
+
+        <div class="content">
+            <!-- Informações de Preço (sem mencionar valor mínimo) -->
+            <div class="info-box">
+                <strong>📊 Como funciona a estimativa</strong>
+                A cada 5 km, o sistema calcula automaticamente o valor aproximado da sua corrida,
+                já considerando benefícios para clientes recorrentes.
+            </div>
+
+            <!-- Calculadora de Preço -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="icon">💰</span> Estimar valor da corrida
+                </div>
+                
+                <div class="input-group">
+                    <label for="distance">Distância da corrida (em km)</label>
+                    <input type="number" id="distance" placeholder="Ex: 10" min="0" step="0.1">
+                </div>
+
+                <div class="input-group">
+                    <label for="clientType">Tipo de cliente</label>
+                    <select id="clientType">
+                        <option value="0">Novo cliente</option>
+                        <option value="5">Cliente recorrente (5–10 viagens) – até 5% off</option>
+                        <option value="10">Cliente VIP (10+ viagens) – até 10% off</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary" onclick="calculatePrice()">Calcular estimativa</button>
+
+                <div id="priceResult" style="display: none;">
+                    <div class="pricing-table">
+                        <div class="pricing-row">
+                            <span>Distância</span>
+                            <span id="displayDistance">-</span>
+                        </div>
+                        <div class="pricing-row">
+                            <span>Valor base</span>
+                            <span id="displayBasePrice">-</span>
+                        </div>
+                        <div class="pricing-row" id="discountRow" style="display: none;">
+                            <span>Desconto</span>
+                            <span id="displayDiscount">-</span>
+                        </div>
+                        <div class="pricing-row">
+                            <span>Estimativa final</span>
+                            <span id="displayFinalPrice">-</span>
+                        </div>
+                    </div>
+
+                    <div class="price-display">
+                        <div class="price-label">Estimativa da sua corrida</div>
+                        <div class="price-value" id="finalPrice">R$ 0,00</div>
+                    </div>
+
+                    <div class="discount-info" id="discountInfo" style="display: none;">
+                        <strong>Benefício aplicado</strong>
+                        <span id="discountText"></span>
+                    </div>
+
+                    <button class="btn btn-whatsapp" id="whatsappBtn" onclick="sendToWhatsApp()">
+                        📱 Avançar para reserva via WhatsApp
+                    </button>
+                </div>
+            </div>
+
+            <!-- Agenda Google Calendar -->
+            <div class="section calendar-section">
+                <div class="section-title">
+                    <span class="icon">📅</span> Verificar disponibilidade
+                </div>
+                <p>
+                    Consulte a agenda e veja os horários disponíveis para solicitar sua corrida executiva.
+                </p>
+                
+                <div id="calendarContainer">
+                    <iframe 
+                        id="calendarFrame"
+                        src="" 
+                        style="border: 0; width: 100%; height: 360px; border-radius: 10px;" 
+                        frameborder="0" 
+                        scrolling="no">
+                    </iframe>
+                </div>
+                
+                <div class="info-box" style="margin-top: 10px;">
+                    <strong>Como prosseguir</strong>
+                    1. Verifique um horário que faça sentido para você.<br>
+                    2. Use a calculadora acima para ter a estimativa do valor.<br>
+                    3. Clique em “Avançar para reserva via WhatsApp” para finalizar os detalhes diretamente comigo.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Login Admin -->
+    <div class="login-modal" id="loginModal">
+        <div class="login-content">
+            <h2>🔐 Acesso do administrador</h2>
+            <div class="input-group">
+                <label for="adminPassword">Senha de administrador</label>
+                <input type="password" id="adminPassword" placeholder="Digite a senha">
+                <div class="help-text">Senha padrão inicial: <strong>admin123</strong> (altere nas configurações).</div>
+            </div>
+            <button class="btn btn-primary" onclick="adminLogin()">Entrar</button>
+            <button class="btn btn-secondary" onclick="closeLoginModal()">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Modal de Configurações -->
+    <div class="modal" id="configModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>⚙️ Configurações do aplicativo</h2>
+                <button class="close-btn" onclick="closeConfigModal()">×</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">
+                    <span class="icon">📅</span> Integração Google Calendar
+                </div>
+                
+                <div class="input-group">
+                    <label for="calendarId">ID do Google Calendar</label>
+                    <input type="text" id="calendarId" placeholder="seuemail@gmail.com">
+                    <div class="help-text">
+                        Google Calendar → Configurações → Seu calendário → Integrar calendário → ID do calendário.
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <strong>Passo a passo rápido</strong>
+                    1. Acesse <a href="https://calendar.google.com" target="_blank">Google Calendar</a><br>
+                    2. Vá em ⚙️ &gt; Configurações<br>
+                    3. Selecione o calendário desejado<br>
+                    4. Em “Integrar calendário”, copie o “ID do calendário”<br>
+                    5. Cole aqui e salve.
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">
+                    <span class="icon">📱</span> WhatsApp para reservas
+                </div>
+                
+                <div class="input-group">
+                    <label for="whatsappNumber">Número do WhatsApp</label>
+                    <input type="text" id="whatsappNumber" placeholder="5511999999999">
+                    <div class="help-text">
+                        Formato: 55 + DDD + número (sem espaços ou símbolos). Ex: <strong>5511987654321</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">
+                    <span class="icon">🔒</span> Segurança do painel
+                </div>
+                
+                <div class="input-group">
+                    <label for="newPassword">Nova senha de administrador</label>
+                    <input type="password" id="newPassword" placeholder="Digite a nova senha">
+                </div>
+
+                <div class="input-group">
+                    <label for="confirmPassword">Confirmar nova senha</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirme a nova senha">
+                </div>
+            </div>
+
+            <button class="btn btn-success" onclick="saveConfig()">💾 Salvar configurações</button>
+            <button class="btn logout-btn" onclick="adminLogout()">🚪 Sair do modo administrador</button>
+        </div>
+    </div>
+
+    <script>
+        // Configurações padrão
+        let config = {
+            calendarId: '',
+            whatsappNumber: '',
+            adminPassword: 'admin123'
+        };
+
+        let isAdmin = false;
+
+        // Carregar configurações do localStorage
+        function loadConfig() {
+            const savedConfig = localStorage.getItem('premiumRidesConfig');
+            if (savedConfig) {
+                config = JSON.parse(savedConfig);
+            }
+            updateCalendar();
+        }
+
+        // Salvar configurações no localStorage
+        function saveConfigToStorage() {
+            localStorage.setItem('premiumRidesConfig', JSON.stringify(config));
+        }
+
+        // Verificar se é admin ao carregar a página
+        function checkAdminStatus() {
+            const adminSession = sessionStorage.getItem('premiumRidesAdmin');
+            if (adminSession === 'true') {
+                isAdmin = true;
+                document.getElementById('configBtn').style.display = 'flex';
+            }
+        }
+
+        // Login do administrador
+        function adminLogin() {
+            const password = document.getElementById('adminPassword').value;
+            
+            if (password === config.adminPassword) {
+                isAdmin = true;
+                sessionStorage.setItem('premiumRidesAdmin', 'true');
+                document.getElementById('configBtn').style.display = 'flex';
+                closeLoginModal();
+                alert('Login de administrador realizado com sucesso.');
+            } else {
+                alert('Senha incorreta.');
+            }
+        }
+
+        // Logout do administrador
+        function adminLogout() {
+            isAdmin = false;
+            sessionStorage.removeItem('premiumRidesAdmin');
+            document.getElementById('configBtn').style.display = 'none';
+            closeConfigModal();
+            alert('Você saiu do modo administrador.');
+        }
+
+        // Abrir modal de login
+        function openLoginModal() {
+            document.getElementById('loginModal').classList.add('active');
+            document.getElementById('adminPassword').value = '';
+        }
+
+        // Fechar modal de login
+        function closeLoginModal() {
+            document.getElementById('loginModal').classList.remove('active');
+        }
+
+        // Abrir modal de configurações
+        function openConfigModal() {
+            if (!isAdmin) {
+                openLoginModal();
+                return;
+            }
+            
+            document.getElementById('calendarId').value = config.calendarId;
+            document.getElementById('whatsappNumber').value = config.whatsappNumber;
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+            document.getElementById('configModal').classList.add('active');
+        }
+
+        // Fechar modal de configurações
+        function closeConfigModal() {
+            document.getElementById('configModal').classList.remove('active');
+        }
+
+        // Salvar configurações
+        function saveConfig() {
+            const calendarId = document.getElementById('calendarId').value.trim();
+            const whatsappNumber = document.getElementById('whatsappNumber').value.trim();
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            // Validar WhatsApp
+            if (whatsappNumber && !/^\d{12,13}$/.test(whatsappNumber)) {
+                alert('Número do WhatsApp inválido! Use o formato: 5511999999999');
+                return;
+            }
+
+            // Validar senha
+            if (newPassword || confirmPassword) {
+                if (newPassword !== confirmPassword) {
+                    alert('As senhas não coincidem.');
+                    return;
+                }
+                if (newPassword.length < 6) {
+                    alert('A senha deve ter pelo menos 6 caracteres.');
+                    return;
+                }
+                config.adminPassword = newPassword;
+            }
+
+            config.calendarId = calendarId;
+            config.whatsappNumber = whatsappNumber;
+            saveConfigToStorage();
+            updateCalendar();
+
+            alert('Configurações salvas com sucesso.');
+            closeConfigModal();
+        }
+
+        // Atualizar calendário
+        function updateCalendar() {
+            const calendarFrame = document.getElementById('calendarFrame');
+            const container = document.getElementById('calendarContainer');
+
+            if (config.calendarId) {
+                calendarFrame.src = `https://calendar.google.com/calendar/embed?src=${encodeURIComponent(config.calendarId)}&ctz=America/Sao_Paulo&mode=WEEK`;
+                // garantir que o iframe exista
+                if (!container.contains(calendarFrame)) {
+                    container.innerHTML = '';
+                    container.appendChild(calendarFrame);
+                }
+            } else {
+                container.innerHTML = 
+                    '<div class="info-box"><strong>Calendário não configurado</strong> Assim que a agenda for integrada, você poderá visualizar aqui os horários disponíveis.</div>';
+            }
+        }
+
+        // Calcular preço (mantendo mínimo de R$ 200 internamente, sem mostrar a regra)
+        function calculatePrice() {
+            const distance = parseFloat(document.getElementById('distance').value);
+            const discountPercent = parseInt(document.getElementById('clientType').value);
+
+            if (!distance || distance <= 0) {
+                alert('Informe uma distância válida em quilômetros.');
+                return;
+            }
+
+            // R$ 250 a cada 5 km → R$ 50 / km
+            const pricePerKm = 250 / 5;
+            let basePrice = distance * pricePerKm;
+
+            // Regra interna: valor mínimo R$ 200 (não aparece no texto)
+            if (basePrice < 200) {
+                basePrice = 200;
+            }
+
+            // Aplicar desconto
+            const discountAmount = (basePrice * discountPercent) / 100;
+            const finalPrice = basePrice - discountAmount;
+
+            // Exibir resultados
+            document.getElementById('displayDistance').textContent = distance.toFixed(1) + ' km';
+            document.getElementById('displayBasePrice').textContent = 'R$ ' + basePrice.toFixed(2);
+            document.getElementById('displayFinalPrice').textContent = 'R$ ' + finalPrice.toFixed(2);
+            document.getElementById('finalPrice').textContent = 'R$ ' + finalPrice.toFixed(2);
+
+            if (discountPercent > 0) {
+                document.getElementById('discountRow').style.display = 'flex';
+                document.getElementById('displayDiscount').textContent =
+                    '- R$ ' + discountAmount.toFixed(2) + ' (' + discountPercent + '%)';
+                document.getElementById('discountInfo').style.display = 'block';
+                document.getElementById('discountText').textContent =
+                    `Você está recebendo um benefício de R$ ${discountAmount.toFixed(2)} como cliente recorrente.`;
+            } else {
+                document.getElementById('discountRow').style.display = 'none';
+                document.getElementById('discountInfo').style.display = 'none';
+            }
+
+            document.getElementById('priceResult').style.display = 'block';
+            document.getElementById('whatsappBtn').style.display = 'block';
+
+            // Guardar dados para WhatsApp
+            window.rideData = {
+                distance: distance,
+                basePrice: basePrice,
+                discount: discountPercent,
+                discountAmount: discountAmount,
+                finalPrice: finalPrice
+            };
+        }
+
+        // Enviar para WhatsApp
+        function sendToWhatsApp() {
+            if (!window.rideData) {
+                alert('Calcule a estimativa primeiro.');
+                return;
+            }
+
+            if (!config.whatsappNumber) {
+                alert('WhatsApp não configurado. Entre em contato com o administrador.');
+                return;
+            }
+
+            const data = window.rideData;
+            let message = `Olá! Gostaria de solicitar uma corrida Premium:\n\n`;
+            message += `📍 Distância aproximada: ${data.distance.toFixed(1)} km\n`;
+            message += `💵 Estimativa base: R$ ${data.basePrice.toFixed(2)}\n`;
+            
+            if (data.discount > 0) {
+                message += `🎉 Benefício aplicado (${data.discount}%): -R$ ${data.discountAmount.toFixed(2)}\n`;
+            }
+            
+            message += `💰 Estimativa final: R$ ${data.finalPrice.toFixed(2)}\n\n`;
+            message += `Gostaria de confirmar a disponibilidade e finalizar a proposta.`;
+
+            const whatsappUrl = `https://wa.me/${config.whatsappNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Atalho para abrir login admin (Ctrl + Shift + A)
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+                openLoginModal();
+            }
+        });
+
+        // Inicialização
+        window.onload = function() {
+            loadConfig();
+            checkAdminStatus();
+        };
+
+        // Fechar modais ao clicar fora
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal') ||
+                event.target.classList.contains('login-modal')) {
+                event.target.classList.remove('active');
+            }
+        };
+    </script>
+</body>
+</html>
